@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VendingMachine.API.Data;
+using VendingMachine.API.Dtos;
+using VendingMachine.API.Models;
 
 namespace VendingMachine.API.Controllers
 {
@@ -11,8 +14,10 @@ namespace VendingMachine.API.Controllers
     public class CanController : ControllerBase
     {
         public IVendingRepository _repo;
-        public CanController(IVendingRepository repo)
+        public IMapper _mapper;
+        public CanController(IVendingRepository repo, IMapper mapper)
         {
+            _mapper = mapper;
             _repo = repo;
         }
 
@@ -24,7 +29,7 @@ namespace VendingMachine.API.Controllers
             return Ok(can);
         }
 
-        // PUT api/values/5
+        // PUT api/can/5
         [HttpPut("{id}")]
         public async Task<ActionResult> BuyCan(int id)
         {
@@ -44,6 +49,22 @@ namespace VendingMachine.API.Controllers
                 return Ok();
 
             return BadRequest("Failed to buy a can");
+        }
+
+        [HttpPut]
+        [Route("RestockInventory/{id}")]
+        public async Task<ActionResult> RestockInventory(int id,  List<RestockInventoryForUpdate> restockInventory)
+        {
+            var AllCans = await _repo.GetAllCans();
+
+            _repo.UpdateInventory(restockInventory);
+
+            var cansToReturn = _mapper.Map(restockInventory, AllCans);
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to update Inventory");
         }
     }
 }

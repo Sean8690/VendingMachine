@@ -1,4 +1,5 @@
 using AutoMapper;
+using VendingMachine.API.Dtos;
 using VendingMachine.API.Models;
 
 namespace VendingMachine.API.Helpers
@@ -7,7 +8,7 @@ namespace VendingMachine.API.Helpers
     {
         public AutoMapperProfiles()
         {
-            //CreateMap<CanForUpdateDto, Can>();
+            CreateMap<RestockInventoryForUpdate, Can>();
         }
     }
 }
