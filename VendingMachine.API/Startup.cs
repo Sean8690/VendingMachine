@@ -23,6 +23,10 @@ namespace VendingMachine.API
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(
                 Configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddDbContext<DataContext>(x => x.UseSqlServer(
+              //   Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
             services.AddCors();
             services.AddAutoMapper(typeof(VendingRepository).Assembly);
